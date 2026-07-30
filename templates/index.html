@@ -8,19 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS (CDN for simple deployment) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: '#4F46E5',
-                        secondary: '#EC4899',
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#4F46E5', secondary: '#EC4899' }
                 }
             }
         }
@@ -31,13 +26,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="min-h-screen relative overflow-x-hidden flex items-center justify-center p-4 sm:p-8">
-    <!-- Animated Background -->
     <div class="animated-bg"></div>
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
     <div class="bg-shape shape-3"></div>
 
-    <!-- Main Container -->
     <div class="glass-card w-full max-w-4xl rounded-3xl p-8 md:p-12 relative z-10 animate-fade-in-up">
         
         <div class="text-center mb-10">
@@ -45,140 +38,334 @@
                 <i class="fa-solid fa-heart-pulse text-3xl pulse-anim"></i>
             </div>
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">Cardiovra</h1>
-            <p class="text-indigo-200/80 text-lg max-w-2xl mx-auto">Advanced Machine Learning diagnostics for early heart disease detection. Enter patient vitals below.</p>
+            <p class="text-indigo-200/80 text-lg max-w-2xl mx-auto">Advanced Machine Learning diagnostics for early heart disease detection. Let's walk through your vitals.</p>
         </div>
 
-        <form action="/predict" method="post" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Age -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-cake-candles mr-2 text-indigo-300"></i>Age</label>
-                    <input type="number" name="Age" class="form-control" placeholder="e.g. 45" required min="1" max="120">
+        <!-- Wizard Progress Bar -->
+        <div class="mb-10 relative">
+            <div class="flex justify-between relative z-10">
+                <div class="step-indicator active" id="indicator-1">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold mb-2 mx-auto step-circle">1</div>
+                    <span class="text-sm font-medium text-indigo-200">Personal Info</span>
                 </div>
-                <!-- Sex -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-venus-mars mr-2 text-indigo-300"></i>Sex</label>
-                    <select name="Sex" class="form-control" required>
-                        <option value="" disabled selected>Select gender</option>
-                        <option value="1">Male</option>
-                        <option value="0">Female</option>
-                    </select>
+                <div class="step-indicator" id="indicator-2">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold mb-2 mx-auto step-circle">2</div>
+                    <span class="text-sm font-medium text-indigo-200">Clinical Stats</span>
                 </div>
-                <!-- Chest Pain Type -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-lungs mr-2 text-indigo-300"></i>Chest Pain Type</label>
-                    <select name="ChestPainType" class="form-control" required>
-                        <option value="" disabled selected>Select type</option>
-                        <option value="0">Typical Angina (0)</option>
-                        <option value="1">Atypical Angina (1)</option>
-                        <option value="2">Non-anginal Pain (2)</option>
-                        <option value="3">Asymptomatic (3)</option>
-                    </select>
+                <div class="step-indicator" id="indicator-3">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold mb-2 mx-auto step-circle">3</div>
+                    <span class="text-sm font-medium text-indigo-200">ECG & Details</span>
                 </div>
-                <!-- Resting BP -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-droplet mr-2 text-indigo-300"></i>Resting BP (mm Hg)</label>
-                    <input type="number" name="RestingBP" class="form-control" placeholder="e.g. 120" required min="50" max="250">
-                </div>
-                <!-- Cholesterol -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-flask mr-2 text-indigo-300"></i>Cholesterol (mg/dl)</label>
-                    <input type="number" name="Cholesterol" class="form-control" placeholder="e.g. 200" required min="0" max="600">
-                </div>
-                <!-- Fasting BS -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-cubes-stacked mr-2 text-indigo-300"></i>Fasting Blood Sugar</label>
-                    <select name="FastingBS" class="form-control" required>
-                        <option value="" disabled selected>BS > 120 mg/dl?</option>
-                        <option value="1">Yes (1)</option>
-                        <option value="0">No (0)</option>
-                    </select>
-                </div>
-                <!-- Resting ECG -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-wave-square mr-2 text-indigo-300"></i>Resting ECG</label>
-                    <select name="RestingECG" class="form-control" required>
-                        <option value="" disabled selected>Select result</option>
-                        <option value="0">Normal (0)</option>
-                        <option value="1">ST-T Wave Abnormality (1)</option>
-                        <option value="2">Left Ventricular Hypertrophy (2)</option>
-                    </select>
-                </div>
-                <!-- Max HR -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-heart mr-2 text-indigo-300"></i>Max Heart Rate</label>
-                    <input type="number" name="MaxHR" class="form-control" placeholder="e.g. 150" required min="60" max="220">
-                </div>
-                <!-- Exercise Angina -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-person-running mr-2 text-indigo-300"></i>Exercise Angina</label>
-                    <select name="ExerciseAngina" class="form-control" required>
-                        <option value="" disabled selected>Induced by exercise?</option>
-                        <option value="1">Yes (1)</option>
-                        <option value="0">No (0)</option>
-                    </select>
-                </div>
-                <!-- Oldpeak -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-chart-line mr-2 text-indigo-300"></i>Oldpeak</label>
-                    <input type="number" step="any" name="Oldpeak" class="form-control" placeholder="e.g. 1.5" required>
-                </div>
-                <!-- ST Slope -->
-                <div class="input-group">
-                    <label class="block text-sm font-medium text-indigo-100 mb-2"><i class="fa-solid fa-arrow-trend-up mr-2 text-indigo-300"></i>ST Slope</label>
-                    <select name="ST_Slope" class="form-control" required>
-                        <option value="" disabled selected>Select slope</option>
-                        <option value="0">Upsloping (0)</option>
-                        <option value="1">Flat (1)</option>
-                        <option value="2">Downsloping (2)</option>
-                    </select>
+            </div>
+            <div class="absolute top-5 left-0 h-1 w-full bg-indigo-900/50 -z-0">
+                <div id="progress-bar-fill" class="h-full bg-indigo-500 transition-all duration-500" style="width: 15%;"></div>
+            </div>
+        </div>
+
+        <form id="prediction-form" class="space-y-6 relative overflow-hidden min-h-[350px]">
+            <!-- Step 1 -->
+            <div class="wizard-step active" id="step-1">
+                <h3 class="text-2xl font-bold text-white mb-6 border-b border-indigo-500/30 pb-2">1. Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-indigo-100 mb-2">Age</label>
+                        <input type="number" name="Age" class="form-control" placeholder="Years (e.g., 45)" required min="1" max="120">
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-indigo-100 mb-2">Sex</label>
+                        <select name="Sex" class="form-control" required>
+                            <option value="" disabled selected>Select gender</option>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                    <div class="input-group md:col-span-2">
+                        <label class="flex items-center text-sm font-medium text-indigo-100 mb-2">
+                            Chest Pain Type
+                            <span class="ml-2 text-indigo-300 text-xs cursor-help" title="0: Typical (Provoked by exertion)&#10;1: Atypical (Not classic)&#10;2: Non-anginal (Not heart-related)&#10;3: Asymptomatic (No pain)"><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <select name="ChestPainType" class="form-control" required>
+                            <option value="" disabled selected>Describe any chest pain</option>
+                            <option value="0">Typical Angina (Classic heart pain)</option>
+                            <option value="1">Atypical Angina (Unusual pain)</option>
+                            <option value="2">Non-anginal Pain (Not heart related)</option>
+                            <option value="3">Asymptomatic (No pain)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-10 text-center">
-                <button type="submit" class="submit-btn group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-indigo-600 rounded-full hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 w-full md:w-auto md:min-w-[300px]">
-                    <span class="absolute inset-0 w-full h-full -mt-1 rounded-full opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
-                    <i class="fa-solid fa-microchip mr-2 group-hover:rotate-12 transition-transform"></i> Run Diagnostics
+            <!-- Step 2 -->
+            <div class="wizard-step" id="step-2">
+                <h3 class="text-2xl font-bold text-white mb-6 border-b border-indigo-500/30 pb-2">2. Clinical Statistics</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label class="flex items-center text-sm font-medium text-indigo-100 mb-2">
+                            Resting Blood Pressure
+                            <span class="ml-2 text-indigo-300 text-xs cursor-help" title="Systolic pressure in mm Hg upon admission to hospital."><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <input type="number" name="RestingBP" class="form-control" placeholder="mm Hg (e.g., 120)" required min="50" max="250">
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-indigo-100 mb-2">Cholesterol</label>
+                        <input type="number" name="Cholesterol" class="form-control" placeholder="mg/dl (e.g., 200)" required min="0" max="600">
+                    </div>
+                    <div class="input-group">
+                        <label class="flex items-center text-sm font-medium text-indigo-100 mb-2">
+                            Fasting Blood Sugar > 120 mg/dl?
+                            <span class="ml-2 text-indigo-300 text-xs cursor-help" title="Is the patient's blood sugar higher than 120 mg/dl after an overnight fast?"><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <select name="FastingBS" class="form-control" required>
+                            <option value="" disabled selected>Select Yes or No</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-indigo-100 mb-2">Maximum Heart Rate</label>
+                        <input type="number" name="MaxHR" class="form-control" placeholder="Beats per minute (e.g. 150)" required min="60" max="220">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="wizard-step" id="step-3">
+                <h3 class="text-2xl font-bold text-white mb-6 border-b border-indigo-500/30 pb-2">3. ECG & Exercise Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label class="block text-sm font-medium text-indigo-100 mb-2">Resting ECG Results</label>
+                        <select name="RestingECG" class="form-control" required>
+                            <option value="" disabled selected>Select ECG Result</option>
+                            <option value="0">Normal</option>
+                            <option value="1">ST-T Wave Abnormality</option>
+                            <option value="2">Left Ventricular Hypertrophy</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="flex items-center text-sm font-medium text-indigo-100 mb-2">
+                            Exercise-Induced Angina?
+                            <span class="ml-2 text-indigo-300 text-xs cursor-help" title="Did the patient experience chest pain caused by exercise?"><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <select name="ExerciseAngina" class="form-control" required>
+                            <option value="" disabled selected>Yes or No</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="flex items-center text-sm font-medium text-indigo-100 mb-2">
+                            Oldpeak
+                            <span class="ml-2 text-indigo-300 text-xs cursor-help" title="ST depression induced by exercise relative to rest."><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <input type="number" step="any" name="Oldpeak" class="form-control" placeholder="Value (e.g. 1.5)" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="flex items-center text-sm font-medium text-indigo-100 mb-2">
+                            ST Slope
+                            <span class="ml-2 text-indigo-300 text-xs cursor-help" title="The slope of the peak exercise ST segment."><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <select name="ST_Slope" class="form-control" required>
+                            <option value="" disabled selected>Select slope direction</option>
+                            <option value="0">Upsloping</option>
+                            <option value="1">Flat</option>
+                            <option value="2">Downsloping</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="pt-8 flex justify-between items-center border-t border-indigo-500/20 mt-8 relative z-20">
+                <button type="button" id="prev-btn" class="px-6 py-2 rounded-lg text-indigo-200 hover:text-white hover:bg-indigo-900/50 transition hidden">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Back
                 </button>
+                <div class="ml-auto">
+                    <button type="button" id="next-btn" class="px-8 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition shadow-lg shadow-indigo-600/30">
+                        Continue <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                    <button type="submit" id="submit-btn" class="px-8 py-3 rounded-xl bg-pink-600 text-white font-bold hover:bg-pink-500 transition shadow-lg shadow-pink-600/30 hidden">
+                        <i class="fa-solid fa-microchip mr-2"></i> Run Diagnostics
+                    </button>
+                </div>
             </div>
         </form>
 
-        {% if prediction_text %}
-        <div class="mt-8 animate-fade-in-up delay-200">
-            {% if "Normal" in prediction_text %}
-                <div class="result-card success p-6 rounded-2xl flex items-center gap-4">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-2xl">
-                        <i class="fa-solid fa-check"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-white mb-1">Diagnosis: Healthy</h3>
-                        <p class="text-green-100/80">{{ prediction_text }}</p>
-                    </div>
-                </div>
-            {% elif "Error" in prediction_text %}
-                <div class="result-card error p-6 rounded-2xl flex items-center gap-4">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-2xl">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-white mb-1">Error Processing Request</h3>
-                        <p class="text-red-100/80">{{ prediction_text }}</p>
-                    </div>
-                </div>
-            {% else %}
-                <div class="result-card warning p-6 rounded-2xl flex items-center gap-4">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 text-2xl">
-                        <i class="fa-solid fa-notes-medical"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-white mb-1">Diagnosis: High Risk</h3>
-                        <p class="text-rose-100/80">{{ prediction_text }}</p>
-                    </div>
-                </div>
-            {% endif %}
+        <!-- Loading State -->
+        <div id="loading-state" class="hidden flex flex-col items-center justify-center py-12">
+            <div class="w-16 h-16 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mb-6"></div>
+            <h3 class="text-xl font-semibold text-white animate-pulse">Analyzing neural pathways...</h3>
+            <p class="text-indigo-200 mt-2">Our ML model is evaluating the vitals.</p>
         </div>
-        {% endif %}
+
+        <!-- Result State -->
+        <div id="result-state" class="hidden mt-8">
+            <div id="result-card" class="p-8 rounded-2xl flex flex-col sm:flex-row items-center gap-6">
+                <div id="result-icon-container" class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-3xl">
+                    <i id="result-icon" class="fa-solid fa-check"></i>
+                </div>
+                <div class="text-center sm:text-left">
+                    <h3 id="result-title" class="text-2xl font-bold text-white mb-2">Diagnosis Complete</h3>
+                    <p id="result-message" class="text-lg"></p>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <button type="button" id="reset-btn" class="px-6 py-2 rounded-lg border border-indigo-500 text-indigo-300 hover:text-white hover:bg-indigo-900/50 transition">
+                    <i class="fa-solid fa-rotate-right mr-2"></i> Start New Evaluation
+                </button>
+            </div>
+        </div>
         
     </div>
+
+    <!-- Application Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('prediction-form');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const loadingState = document.getElementById('loading-state');
+            const resultState = document.getElementById('result-state');
+            const resetBtn = document.getElementById('reset-btn');
+            
+            const steps = document.querySelectorAll('.wizard-step');
+            const indicators = document.querySelectorAll('.step-indicator');
+            const progressBar = document.getElementById('progress-bar-fill');
+            
+            let currentStep = 0;
+
+            function updateUI() {
+                // Handle Steps
+                steps.forEach((step, index) => {
+                    if(index === currentStep) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+
+                // Handle Indicators & Progress Bar
+                indicators.forEach((ind, index) => {
+                    if(index <= currentStep) {
+                        ind.classList.add('active');
+                    } else {
+                        ind.classList.remove('active');
+                    }
+                });
+                
+                const progressPercentages = [15, 50, 100];
+                progressBar.style.width = progressPercentages[currentStep] + '%';
+
+                // Handle Buttons
+                prevBtn.classList.toggle('hidden', currentStep === 0);
+                if (currentStep === steps.length - 1) {
+                    nextBtn.classList.add('hidden');
+                    submitBtn.classList.remove('hidden');
+                } else {
+                    nextBtn.classList.remove('hidden');
+                    submitBtn.classList.add('hidden');
+                }
+            }
+
+            // Validation logic
+            function validateCurrentStep() {
+                const currentInputs = steps[currentStep].querySelectorAll('input, select');
+                let valid = true;
+                currentInputs.forEach(input => {
+                    if (!input.checkValidity()) {
+                        input.reportValidity();
+                        valid = false;
+                    }
+                });
+                return valid;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if(validateCurrentStep()) {
+                    currentStep++;
+                    updateUI();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentStep--;
+                updateUI();
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if(!validateCurrentStep()) return;
+
+                // Hide form, show loading
+                form.classList.add('hidden');
+                loadingState.classList.remove('hidden');
+
+                // Gather data
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                try {
+                    const response = await fetch('/api/predict', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    // Hide loading, show result
+                    loadingState.classList.add('hidden');
+                    resultState.classList.remove('hidden');
+                    
+                    const resultCard = document.getElementById('result-card');
+                    const resultIconCont = document.getElementById('result-icon-container');
+                    const resultIcon = document.getElementById('result-icon');
+                    const resultTitle = document.getElementById('result-title');
+                    const resultMsg = document.getElementById('result-message');
+                    
+                    // Reset classes
+                    resultCard.className = 'p-8 rounded-2xl flex flex-col sm:flex-row items-center gap-6 result-card';
+                    resultIconCont.className = 'flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center text-3xl';
+                    
+                    if (result.status === 'high_risk') {
+                        resultCard.classList.add('warning');
+                        resultIconCont.classList.add('bg-rose-500/20', 'text-rose-400');
+                        resultIcon.className = 'fa-solid fa-notes-medical';
+                        resultTitle.textContent = 'Diagnosis: High Risk';
+                        resultMsg.textContent = result.message;
+                        resultMsg.className = 'text-rose-100/80 mt-2 text-lg';
+                    } else if (result.status === 'normal') {
+                        resultCard.classList.add('success');
+                        resultIconCont.classList.add('bg-green-500/20', 'text-green-400');
+                        resultIcon.className = 'fa-solid fa-check';
+                        resultTitle.textContent = 'Diagnosis: Healthy';
+                        resultMsg.textContent = result.message;
+                        resultMsg.className = 'text-green-100/80 mt-2 text-lg';
+                    } else {
+                        resultCard.classList.add('error');
+                        resultIconCont.classList.add('bg-red-500/20', 'text-red-400');
+                        resultIcon.className = 'fa-solid fa-triangle-exclamation';
+                        resultTitle.textContent = 'Error';
+                        resultMsg.textContent = result.message;
+                        resultMsg.className = 'text-red-100/80 mt-2 text-lg';
+                    }
+                    
+                } catch (err) {
+                    loadingState.classList.add('hidden');
+                    alert("An error occurred connecting to the server.");
+                    form.classList.remove('hidden');
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                form.reset();
+                currentStep = 0;
+                resultState.classList.add('hidden');
+                form.classList.remove('hidden');
+                updateUI();
+            });
+
+        });
+    </script>
 </body>
 </html>
