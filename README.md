@@ -1,11 +1,11 @@
-# 🫀 CardioCare: Heart Disease Prediction
+# 🫀 Cardiovra: Heart Disease Prediction
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
 
-A state-of-the-art machine learning application that predicts the likelihood of heart disease based on patient medical data. CardioCare features a highly optimized Naive Bayes predictive model wrapped in a beautiful, responsive, and glassmorphic user interface.
+A state-of-the-art machine learning application that predicts the likelihood of heart disease based on patient medical data. Cardiovra features a highly optimized Naive Bayes predictive model wrapped in a beautiful, responsive, and glassmorphic user interface.
 
 ## ✨ Features
 
